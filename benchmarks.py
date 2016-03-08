@@ -1,3 +1,5 @@
+# coding:utf-8
+
 import time
 import pickle
 
@@ -14,18 +16,36 @@ try:
 except ImportError:
     simplejson = None
 try:
+    import bson.json_util as bson
+except ImportError:
+    bson = None
+try:
     import json
 except ImportError:
     json = None
 
 default_data = {
-    "name": "Foo",
-    "type": "Bar",
-    "count": 1,
-    "info": {
-        "x": 203,
-        "y": 102,},}
-
+    "glossary": {
+        "title": "example glossary",
+		"GlossDiv": {
+            "title": "S",
+			"GlossList": {
+                "GlossEntry": {
+                    "ID": "SGML",
+					"SortAs": "SGML",
+					"GlossTerm": "Standard Generalized Markup Language",
+					"Acronym": "SGML",
+					"Abbrev": "ISO 8879:1986",
+					"GlossDef": {
+                        "para": "A meta-markup language, used to create markup languages such as DocBook.",
+						"GlossSeeAlso": ["GML", "XML"]
+                    },
+					"GlossSee": "markup"
+                }
+            }
+        }
+    }
+}
 
 def ttt(f, data=None, x=100*1000):
     start = time.time()
@@ -55,6 +75,8 @@ if ujson:
     contenders.append(('ujson', (ujson.encode, ujson.decode)))
 if simplejson:
     contenders.append(('simplejson', (simplejson.dumps, simplejson.loads)))
+if bson:
+    contenders.append(('mongodb bson', (bson.dumps, bson.loads)))
 if json:
     contenders.append(('stdlib json', (json.dumps, json.loads)))
 
